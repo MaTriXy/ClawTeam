@@ -29,7 +29,7 @@ Workflow:
    - execution sequence
    - next steps
 
-IMPORTANT: Use the polling loop (step 5) to wait. Do NOT finalize until every member has reported."""
+IMPORTANT: Wait for the decision-editor's strategy memo before finalizing. Use the polling loop (step 5) to wait. Do NOT finalize until every member has reported."""
 
 [[template.agents]]
 name = "systems-analyst"
