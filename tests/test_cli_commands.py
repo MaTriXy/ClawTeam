@@ -108,6 +108,35 @@ def test_team_request_join_timeout_returns_pending_instead_of_error(tmp_path):
     assert "join-status demo" in result.output
 
 
+def test_inbox_send_reads_content_from_stdin_when_argument_missing(tmp_path):
+    runner = CliRunner()
+    env = {
+        "HOME": str(tmp_path),
+        "CLAWTEAM_DATA_DIR": str(tmp_path / ".clawteam"),
+        "CLAWTEAM_AGENT_ID": "worker001",
+        "CLAWTEAM_AGENT_NAME": "worker",
+    }
+
+    TeamManager.create_team(
+        name="demo",
+        leader_name="leader",
+        leader_id="leader001",
+    )
+
+    result = runner.invoke(
+        app,
+        ["inbox", "send", "demo", "leader"],
+        env=env,
+        input="HELLO FROM STDIN\n",
+    )
+
+    assert result.exit_code == 0
+    messages = MailboxManager("demo").receive("leader")
+    assert len(messages) == 1
+    assert messages[0].content == "HELLO FROM STDIN"
+
+
+
 def test_team_join_status_reports_approval(tmp_path):
     runner = CliRunner()
     env = {
